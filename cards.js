@@ -1,6 +1,6 @@
 var cards = [];
 var card_selected = false;
-var board_padding = 20;
+//var board_padding = 20;
 var grid_widht = 263;
 var grid_height = 120;
 var grid_lines = 10;
@@ -23,6 +23,7 @@ function mousePressed() {
       for (var i = cards.length - 1; i >= 0; i--) {
         if (cards[i].get_drag()) {
           cards[i].set_drag(false);
+		  cards[i].card_dropped();
 		  cards[i].reposition();
           return;
         }
@@ -47,11 +48,11 @@ function draw() {
   
 	//Draw grid
 	stroke(255,0,0);
-	for(var i = this.board_padding; i <= width; i += grid_widht) {
-		line(i, 1, i+grid_lines, height);
+	for(var i = grid_widht; i <= width; i += grid_widht) {
+		line(i, 1, i, height);
 	}
-	for(var i = this.board_padding*3; i <= height; i += grid_height) {
-		line(1, i, width, i+grid_lines);
+	for(var i = grid_height; i <= height; i += grid_height) {
+		line(1, i, width, i);
 	}
   
   //Render cards
@@ -77,7 +78,7 @@ function Card(name, construction, items, x=0, y=0, entry=true, id=-1){
   this.drag = false;
   this.offset_center_x = this.card_width/2;
   this.offset_center_y = this.card_height/2;
-  this.card_padding = 20;
+  //this.card_padding = 20;
   this.text_padding = 5;
   
   this.entry_color = color(0,180,0);
@@ -86,6 +87,11 @@ function Card(name, construction, items, x=0, y=0, entry=true, id=-1){
   this.update_pos = function(new_x, new_y) {
     this.x = new_x - this.offset_center_x;
     this.y = new_y - this.offset_center_y;
+  }
+  
+  this.card_dropped = function() {
+	  this.x += this.offset_center_x;
+	  this.y += this.offset_center_y;
   }
   
   this.clicked = function(mouse_x, mouse_y) {
@@ -109,24 +115,24 @@ function Card(name, construction, items, x=0, y=0, entry=true, id=-1){
   }
   
   this.reposition = function() {
-	  fixed_x = grid_widht + this.card_padding;
-	  fixed_y = grid_height + (board_padding*3);
+	  fixed_x = grid_widht;
+	  fixed_y = grid_height;
 	  col = 0;
 	  row = 0;
 	  
-	  while(this.x > fixed_x){
+	  while(this.x >= fixed_x){
 		  fixed_x += grid_widht;
 		  col++;
 	  }
-	  this.x = (col * grid_widht) + grid_lines;
+	  this.x = (col * grid_widht);
 	  
-	  while(this.y > fixed_y){
+	  while(this.y >= fixed_y){
 		  fixed_y += grid_height;
 		  row++;
 	  }
-	  this.y = (row * grid_height) + grid_lines;
+	  this.y = (row * grid_height);
 	  
-	  console.log(''+row+' - '+col);
+	  console.log('' + row + ' - ' + col);
 	  return;
   }
 
@@ -135,10 +141,10 @@ function Card(name, construction, items, x=0, y=0, entry=true, id=-1){
     noStroke();
     (this.entry) ? (fill(this.entry_color)) : (fill(this.exit_color));
 	
-	ver1 = this.x + this.card_padding;
-    ver2 = this.y + this.card_padding*3;
-    ver3 = this.card_width - this.card_padding;
-    ver4 = this.card_height - this.card_padding;
+	ver1 = this.x;
+    ver2 = this.y;
+    ver3 = this.card_width ;
+    ver4 = this.card_height;
 	rect(ver1, ver2, ver3, ver4);
 	
 	textSize(18);

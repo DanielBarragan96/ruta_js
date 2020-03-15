@@ -5,6 +5,7 @@ var grid_height = 120;
 var grid_lines = 10;
 var debug = false;
 var curr_time = 0;
+var grid_padding = 80;
 
 function setup() {
   createCanvas(1900, 3000);
@@ -31,9 +32,22 @@ function mouseReleased() {
   }
 }
 
+function doubleClick() {
+  console.log("DOUBLE");
+}
+
 
 function mousePressed() {
   this.card_selected = true;
+  if(curr_time < 1)
+    curr_time = 1;
+  else {
+    if(curr_time < 10)
+      doubleClick();
+    else
+      curr_time = 1;
+  }
+
   console.log(curr_time);
   for (var i = cards.length - 1; i >= 0; i--) {
     if (cards[i].clicked(mouseX, mouseY)) {
@@ -47,6 +61,11 @@ function mousePressed() {
 
 function draw() {
   background(50);
+  //translate(grid_padding/2,grid_padding);
+  if(curr_time > 0) {
+    curr_time++;
+    (curr_time > 100) ? 0 : curr_time;
+  }
 
 	//Draw grid
   if(debug) {
@@ -67,6 +86,7 @@ function draw() {
     }
     cards[i].show();
   }
+  //translate(0,0);
 }
 
 function Card(name, construction, items, x=0, y=0, entry=true, id=-1){

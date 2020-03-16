@@ -7,6 +7,10 @@ var debug = false;
 var curr_time = 0;
 var grid_padding = 80;
 
+var n;
+var m;
+var i=0;
+
 function setup() {
   createCanvas(1900, 3000);
   frameRate(30);
@@ -23,32 +27,36 @@ function setup() {
 function mouseReleased() {
   this.card_selected = false;
   for (var i = cards.length - 1; i >= 0; i--) {
-    if (cards[i].get_drag()) {
-      cards[i].set_drag(false);
-  cards[i].card_dropped();
-  cards[i].reposition();
-      return;
+        if (cards[i].get_drag() && curr_time == 0) {
+          cards[i].set_drag(false);
+          cards[i].card_dropped();
+          cards[i].reposition();
+          return;
     }
   }
 }
 
 function doubleClick() {
   console.log("DOUBLE");
+  this.card_selected = false;
+  for (var i = cards.length - 1; i >= 0; i--) {
+    cards[i].set_drag(false);
+  }
 }
-
 
 function mousePressed() {
   this.card_selected = true;
   if(curr_time < 1)
     curr_time = 1;
   else {
-    if(curr_time < 10)
+    if(curr_time < 10) {
       doubleClick();
+      return;
+    }
     else
       curr_time = 1;
   }
 
-  console.log(curr_time);
   for (var i = cards.length - 1; i >= 0; i--) {
     if (cards[i].clicked(mouseX, mouseY)) {
       cards[i].set_drag(true);
@@ -64,7 +72,7 @@ function draw() {
   //translate(grid_padding/2,grid_padding);
   if(curr_time > 0) {
     curr_time++;
-    (curr_time > 100) ? 0 : curr_time;
+    curr_time = (curr_time > 10) ? 0 : curr_time;
   }
 
 	//Draw grid
@@ -81,7 +89,7 @@ function draw() {
   //Render cards
   stroke(200);
   for (var i = cards.length - 1; i >= 0; i--) {
-    if(cards[i].get_drag() && this.card_selected) {
+    if(cards[i].get_drag() && this.card_selected && curr_time == 0) {
       cards[i].update_pos(mouseX, mouseY);
     }
     cards[i].show();

@@ -15,12 +15,12 @@ function setup() {
   createCanvas(1900, 3000);
   frameRate(30);
 
-  cards.push(new Card('Glez', 'Buga', '1Dem/1Ext20/5Mod/5Mon', 100, 100, true, 1));
-  cards.push(new Card('Barra', 'Costa', '10Mod/10Mon',250, 250, false, 2));
-  cards.push(new Card('Otro', 'Minerva', '300Duela1.5/250Duela3m',360, 350, false, 3));
+  cards.push(new Card('Glez', 'Buga', '1Dem/1Ext20/5Mod/5Mon', 0, 0, true, 1));
+  cards.push(new Card('Barra', 'Costa', '10Mod/10Mon',0, 1, false, 2));
+  cards.push(new Card('Otro', 'Minerva', '300Duela1.5/250Duela3m',1, 1, false, 3));
 
   for (var i = cards.length - 1; i >= 0; i--) {
-    cards[i].reposition();
+    //cards[i].reposition();
   }
 }
 
@@ -127,10 +127,10 @@ function Card(name, construction, items, x=0, y=0, entry=true, id=-1){
   }
 
   this.clicked = function(mouse_x, mouse_y) {
-    ver1 = this.x;
-    ver2 = this.x + this.card_width;
-    ver3 = this.y;
-    ver4 = this.y + this.card_height;
+    ver1 = (this.x * this.card_width);
+    ver2 = ver1 + this.card_width;
+    ver3 = (this.y * this.card_height);
+    ver4 = ver2 + this.card_height;
     if ((mouse_x > ver1) && (mouse_x < ver2) && (mouse_y > ver3) && (mouse_y < ver4)) {
       return true;
     } else {
@@ -170,8 +170,8 @@ function Card(name, construction, items, x=0, y=0, entry=true, id=-1){
 
 
   this.show = function(){
-    ver1 = this.x + this.card_padding;
-    ver2 = this.y + this.card_padding;
+    ver1 = (this.x * grid_widht) + this.card_padding;
+    ver2 = (this.y * grid_height) + this.card_padding;
     ver3 = this.card_width - (2 * this.card_padding);
     ver4 = this.card_height - (2 * this.card_padding);
 
@@ -186,7 +186,7 @@ function Card(name, construction, items, x=0, y=0, entry=true, id=-1){
   	text(msg, ver1 + this.text_padding , ver2 + this.text_padding , ver3 - this.text_padding , ver4 - this.text_padding );
 
     fill(color(255,255,0))
-    ver1 = this.x + ((1.5 * this.card_width / 2) - this.card_padding);
+    ver1 = (this.x * grid_widht) + ((1.5 * this.card_width / 2) - this.card_padding);
     ver2 = ver2;
     ver3 = this.card_padding / 2 + (ver3 / 4);
     ver4 = this.card_padding / 2 + (ver4 / 4);

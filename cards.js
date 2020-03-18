@@ -11,25 +11,29 @@ var n;
 var m;
 var i = 0;
 
+var col_mon = [];
+
 function setup() {
   createCanvas(1900, 3000);
   frameRate(30);
 
-  cards.push(new Card('Glez', 'Buga', '1Dem/1Ext20/5Mod/5Mon', 0, 0, true, 1));
-  cards.push(new Card('Barra', 'Costa', '10Mod/10Mon', 1, 0, false, 2));
-  cards.push(new Card('Otro', 'Minerva', '300Duela1.5/250Duela3m', 2, 0, false, 3));
+  col_mon.push(new Card('Glez', 'Buga', '1Dem/1Ext20/5Mod/5Mon', 0, 0, true, 1));
+  col_mon.push(new Card('Barra', 'Costa', '10Mod/10Mon', 1, 0, false, 2));
+  col_mon.push(new Card('Otro', 'Minerva', '300Duela1.5/250Duela3m', 2, 0, false, 3));
 
-  for (var i = cards.length - 1; i >= 0; i--) {
-    //cards[i].reposition();
+  row = 0;
+  for (let card of col_mon) {
+      card.update_pos_rc(row, 0);
+      row++;
   }
 }
 
 function mouseReleased() {
   this.card_selected = false;
-  for (var i = cards.length - 1; i >= 0; i--) {
-    if (cards[i].get_drag() && curr_time == 0) {
-      cards[i].set_drag(false);
-      cards[i].card_dropped();
+  for (let card of col_mon) {
+    if (card.get_drag() && curr_time == 0) {
+      card.set_drag(false);
+      card.card_dropped();
       return;
     }
   }
@@ -38,8 +42,8 @@ function mouseReleased() {
 function doubleClick() {
   console.log("DOUBLE");
   this.card_selected = false;
-  for (var i = cards.length - 1; i >= 0; i--) {
-    cards[i].set_drag(false);
+  for (let card of col_mon) {
+    card.set_drag(false);
   }
 }
 
@@ -55,14 +59,14 @@ function mousePressed() {
       curr_time = 1;
   }
 
-  for (var i = cards.length - 1; i >= 0; i--) {
-    if (cards[i].clicked(mouseX, mouseY)) {
-      cards[i].set_drag(true);
-      cards.unshift(cards[i]);
-      cards.splice(i + 1, 1);
-      return;
-    }
-  }
+  for (var i = col_mon.length - 1; i >= 0; i--) {
+     if (col_mon[i].clicked(mouseX, mouseY)) {
+       col_mon[i].set_drag(true);
+       col_mon.unshift(col_mon[i]);
+       col_mon.splice(i + 1, 1);
+       return;
+     }
+   }
 }
 
 function draw() {
@@ -86,11 +90,11 @@ function draw() {
 
   //Render cards
   stroke(200);
-  for (var i = cards.length - 1; i >= 0; i--) {
-    if (cards[i].get_drag() && this.card_selected && curr_time == 0) {
-      cards[i].update_pos(mouseX, mouseY);
+  for (let card of col_mon) {
+    if (card.get_drag() && this.card_selected && curr_time == 0) {
+      card.update_pos_xy(mouseX, mouseY);
     }
-    cards[i].show();
+    card.show();
   }
   //translate(0,0);
 }
@@ -116,9 +120,14 @@ function Card(name, construction, items, row = 0, col = 0, entry = true, id = -1
   this.entry_color = color(0, 180, 0);
   this.exit_color = color(180, 0, 0);
 
-  this.update_pos = function(new_x, new_y) {
+  this.update_pos_xy = function(new_x, new_y) {
     this.x = new_x - this.offset_center_x;
     this.y = new_y - this.offset_center_y;
+  }
+
+  this.update_pos_rc = function(new_row, new_col) {
+    this.row = new_row;
+    this.col = new_col;
   }
 
   this.card_dropped = function() {

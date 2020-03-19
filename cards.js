@@ -34,6 +34,7 @@ function mouseReleased() {
     if (card.get_drag() && curr_time == 0) {
       card.set_drag(false);
       card.card_dropped();
+      organize_cards(0);
       return;
     }
   }
@@ -67,6 +68,15 @@ function mousePressed() {
        return;
      }
    }
+}
+
+function organize_cards(new_col) {
+  row = 0;
+  for (let card of col_mon) {
+      card.update_pos_rc(row, new_col);
+      row++;
+  }
+  return;
 }
 
 function draw() {
